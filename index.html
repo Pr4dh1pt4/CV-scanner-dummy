@@ -103,6 +103,7 @@
     display: flex; align-items: center; gap: 9px;
   }
 
+<<<<<<< HEAD
   /* ---------- Upload / dropzone ---------- */
   .dropzone {
     border: 2px dashed var(--line); border-radius: 6px; background: var(--paper);
@@ -134,6 +135,8 @@
   .bar { height: 8px; background: var(--paper-warm); border-radius: 99px; overflow: hidden; }
   .bar > span { display: block; height: 100%; width: 0%; background: linear-gradient(90deg, var(--gold), var(--batik)); border-radius: 99px; transition: width .35s ease; }
 
+=======
+>>>>>>> 38ac3229aff7ad4270fdcf0b975ff2323430126e
   /* ---------- Problem strip ---------- */
   .strip { background: var(--ink); color: var(--paper); padding: 54px 0; margin-top: 26px; }
   .strip .wrap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; }
@@ -210,6 +213,7 @@
     </div>
   </div>
 
+<<<<<<< HEAD
   <!-- Signature element: kartu interaktif — upload → scan (dummy) → hasil dengan pintu berbayar -->
   <div class="scan-card" id="scanCard">
     <div class="scan-head">
@@ -259,6 +263,25 @@
         <button type="button" class="dz-pick" id="scanAgain" style="width:100%;margin-top:10px;">Pindai CV lain</button>
       </div>
 
+=======
+  <!-- Signature element: kartu hasil scan yang menunjukkan model freemium -->
+  <div class="scan-card" aria-hidden="true">
+    <div class="scan-head"><span><span class="dot"></span>Menganalisis CV_Pradhipta.pdf</span><span>ATS · Global</span></div>
+    <div class="scan-body">
+      <div class="score-line"><span class="score-num">62</span><span class="score-max">/ 100</span></div>
+      <div class="score-label">Skor kelolosan ATS — di bawah ambang panggilan (75)</div>
+      <ul class="findings">
+        <li><svg class="ic" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" fill="#b5462f"/><path d="M10 5v6M10 14v.5" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg> Foto terdeteksi — ditolak parser ATS internasional</li>
+        <li><svg class="ic" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" fill="#b5462f"/><path d="M10 5v6M10 14v.5" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg> Tanggal lahir & status — data pribadi berlebih</li>
+        <li><svg class="ic" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" fill="#c08a2d"/><path d="M6 10h8" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg> 2 kata kunci penting hilang dari deskripsi kerja</li>
+        <li class="locked"><svg class="ic" viewBox="0 0 20 20" fill="none"><rect x="4" y="9" width="12" height="8" rx="1.5" fill="#c4b89f"/><path d="M7 9V7a3 3 0 016 0v2" stroke="#c4b89f" stroke-width="1.8"/></svg> 5 masalah format lain — buka di laporan penuh</li>
+      </ul>
+      <div class="lock-row">
+        <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><rect x="4" y="9" width="12" height="8" rx="1.5" fill="#8a3220"/><path d="M7 9V7a3 3 0 016 0v2" stroke="#8a3220" stroke-width="1.8"/></svg>
+        Laporan penuh + perbaikan otomatis tersedia di versi berbayar
+      </div>
+      <button class="btn btn-primary" id="ctaFullReport" style="width:100%;margin-top:14px;box-shadow:0 5px 0 var(--batik-deep);">Buka laporan penuh →</button>
+>>>>>>> 38ac3229aff7ad4270fdcf0b975ff2323430126e
     </div>
   </div>
 </section>
@@ -318,12 +341,16 @@
     console.log('[event]', eventName); // terlihat di console saat tes lokal
   }
 
+<<<<<<< HEAD
   document.getElementById('ctaHero').addEventListener('click', function(e){
     e.preventDefault();
     track('klik_cek_gratis');
     var card = document.getElementById('scanCard');
     card.scrollIntoView({behavior:'smooth', block:'center'});
   });
+=======
+  document.getElementById('ctaHero').addEventListener('click', function(){ track('klik_cek_gratis'); });
+>>>>>>> 38ac3229aff7ad4270fdcf0b975ff2323430126e
 
   // ---- Fake-door jujur: tombol bayar mencatat NIAT, lalu beri tahu belum tersedia ----
   function fakeDoor(eventName){
@@ -357,6 +384,7 @@
     msg.textContent = 'Terima kasih — kamu masuk daftar tunggu. Kami hubungi lewat email.';
     document.getElementById('email').value = '';
   });
+<<<<<<< HEAD
 
   // ---- Unggah CV (PDF) + pemindaian dummy ----
   // Catatan: pemindaian DISIMULASIKAN di browser (tanpa backend, tanpa parsing PDF).
@@ -491,3 +519,8 @@
 </script>
 </body>
 </html>
+=======
+</script>
+</body>
+</html>
+>>>>>>> 38ac3229aff7ad4270fdcf0b975ff2323430126e
