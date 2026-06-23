@@ -198,6 +198,7 @@
         <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><rect x="4" y="9" width="12" height="8" rx="1.5" fill="#8a3220"/><path d="M7 9V7a3 3 0 016 0v2" stroke="#8a3220" stroke-width="1.8"/></svg>
         Laporan penuh + perbaikan otomatis tersedia di versi berbayar
       </div>
+      <button class="btn btn-primary" id="ctaFullReport" style="width:100%;margin-top:14px;box-shadow:0 5px 0 var(--batik-deep);">Buka laporan penuh →</button>
     </div>
   </div>
 </section>
@@ -228,6 +229,7 @@
     <p>Cek skor ATS dan ringkasan masalah utama tanpa biaya. Untuk laporan lengkap setiap masalah dan perapian otomatis CV-mu, naik ke versi berbayar.</p>
     <p class="tag">Sekitar Rp25.000 / bulan <small>(~$1.5 — sengaja terjangkau)</small></p>
     <p style="margin-top:6px;font-size:.82rem;">Harga final masih dalam penjajakan. Daftar di bawah untuk ikut menentukan.</p>
+    <button class="btn btn-primary" id="ctaSubscribe" style="margin-top:22px;box-shadow:0 5px 0 var(--batik-deep);">Langganan versi penuh</button>
   </div>
 </section>
 
@@ -257,6 +259,20 @@
   }
 
   document.getElementById('ctaHero').addEventListener('click', function(){ track('klik_cek_gratis'); });
+
+  // ---- Fake-door jujur: tombol bayar mencatat NIAT, lalu beri tahu belum tersedia ----
+  function fakeDoor(eventName){
+    track(eventName); // dicatat di dashboard analytics sebagai event terpisah
+    var box = document.getElementById('daftar');
+    var msg = document.getElementById('formMsg');
+    box.scrollIntoView({behavior:'smooth'});
+    msg.style.color = '#4a5d4e';
+    msg.textContent = 'Versi penuh belum dirilis — tinggalkan email-mu, kami kabari begitu siap.';
+  }
+  var fr = document.getElementById('ctaFullReport');
+  if (fr) fr.addEventListener('click', function(){ fakeDoor('klik_laporan_penuh'); });
+  var sb = document.getElementById('ctaSubscribe');
+  if (sb) sb.addEventListener('click', function(){ fakeDoor('klik_langganan'); });
 
   // ---- Form email: tahap validasi pakai Formspree/Tally; di sini placeholder ----
   document.getElementById('signupBtn').addEventListener('click', function(){
