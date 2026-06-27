@@ -319,6 +319,26 @@
 
 <script>
   // ====================================================================
+  // KONFIGURASI PENDAFTARAN EMAIL (Formspree)
+  // --------------------------------------------------------------------
+  // Email pendaftar dikirim ke endpoint Formspree di bawah ini, lalu
+  // masuk ke INBOX email-mu + dashboard Formspree.
+  //
+  // Cara mengaktifkan (sekali saja):
+  //   1. Daftar gratis di https://formspree.io (pakai email yang ingin
+  //      menerima notifikasi pendaftar).
+  //   2. Buat form baru → salin endpoint-nya, contoh:
+  //      https://formspree.io/f/abcdwxyz
+  //   3. Ganti nilai FORMSPREE_ENDPOINT di bawah dengan endpoint itu.
+  //   4. Simpan & deploy. Submit pertama akan minta konfirmasi 1x di
+  //      email Formspree-mu — setelah itu semua email otomatis tertampung.
+  //
+  // Selama masih berisi 'XXXXXXXX', email TIDAK tersimpan (hanya tampil
+  // pesan terima kasih) dan ada peringatan di console browser.
+  // ====================================================================
+  var FORMSPREE_ENDPOINT = 'https://formspree.io/f/mvzjalgj';
+
+  // ====================================================================
   // I18N — pilihan bahasa Indonesia / Inggris
   // Teks default di HTML = bahasa Indonesia. Saat bahasa diganti, semua
   // elemen ber-atribut data-i18n* diisi ulang dari kamus di bawah.
@@ -379,7 +399,9 @@
       scan_steps: ['Membaca struktur CV…','Mengecek keterbacaan ATS…','Mendeteksi data pribadi berlebih…','Mencocokkan kata kunci…','Menyusun skor akhir…'],
       msg_fakedoor: 'Versi penuh belum dirilis — tinggalkan email-mu, kami kabari begitu siap.',
       msg_email_invalid: 'Masukkan alamat email yang valid ya.',
+      msg_email_sending: 'Mengirim…',
       msg_email_success: 'Terima kasih — kamu masuk daftar tunggu. Kami hubungi lewat email.',
+      msg_email_error: 'Gagal mengirim — coba lagi sebentar lagi ya.',
       msg_upload_invalid: 'File harus berformat PDF ya.',
       msg_upload_toobig: 'Ukuran file melebihi 10 MB.'
     },
@@ -438,7 +460,9 @@
       scan_steps: ['Reading CV structure…','Checking ATS readability…','Detecting excess personal data…','Matching keywords…','Compiling final score…'],
       msg_fakedoor: 'The full version isn’t out yet — leave your email and we’ll let you know when it’s ready.',
       msg_email_invalid: 'Please enter a valid email address.',
+      msg_email_sending: 'Sending…',
       msg_email_success: 'Thank you — you’re on the waitlist. We’ll reach out by email.',
+      msg_email_error: 'Couldn’t send — please try again in a moment.',
       msg_upload_invalid: 'The file must be a PDF.',
       msg_upload_toobig: 'File size exceeds 10 MB.'
     }
@@ -526,9 +550,12 @@
   var sb = document.getElementById('ctaSubscribe');
   if (sb) sb.addEventListener('click', function(){ fakeDoor('klik_langganan'); });
 
-  // ---- Form email: tahap validasi pakai Formspree/Tally; di sini placeholder ----
-  document.getElementById('signupBtn').addEventListener('click', function(){
-    var email = document.getElementById('email').value.trim();
+  // ---- Form email: kirim ke Formspree supaya pendaftar benar-benar tertampung ----
+  var signupBtn  = document.getElementById('signupBtn');
+  var emailInput = document.getElementById('email');
+
+  function submitSignup(){
+    var email = emailInput.value.trim();
     var msg = document.getElementById('formMsg');
     var ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     if (!ok) {
@@ -536,13 +563,45 @@
       msg.textContent = t('msg_email_invalid');
       return;
     }
-    track('daftar_email');
-    // TODO setelah deploy: kirim ke Formspree/Tally/Google Form.
-    // Contoh Formspree:
-    // fetch('https://formspree.io/f/XXXX', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email})});
-    msg.style.color = '#4a5d4e';
-    msg.textContent = t('msg_email_success');
-    document.getElementById('email').value = '';
+    track('daftar_email'); // catat NIAT mendaftar di analytics
+
+    // Endpoint belum dikonfigurasi → jangan kirim, tapi beri tahu developer.
+    if (FORMSPREE_ENDPOINT.indexOf('XXXX') !== -1) {
+      console.warn('[LevUp] FORMSPREE_ENDPOINT belum diisi — email TIDAK tersimpan. ' +
+                   'Isi endpoint Formspree-mu di bagian KONFIGURASI paling atas <script>.');
+      msg.style.color = '#4a5d4e';
+      msg.textContent = t('msg_email_success');
+      emailInput.value = '';
+      return;
+    }
+
+    // Kirim ke Formspree.
+    signupBtn.disabled = true;
+    msg.style.color = '#6b6155';
+    msg.textContent = t('msg_email_sending');
+
+    fetch(FORMSPREE_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ email: email, bahasa: lang, _subject: 'Pendaftar baru LevUp' })
+    }).then(function(res){
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      msg.style.color = '#4a5d4e';
+      msg.textContent = t('msg_email_success');
+      emailInput.value = '';
+      track('daftar_email_terkirim'); // konfirmasi tersimpan ke Formspree
+    }).catch(function(e){
+      console.error('[LevUp] Gagal mengirim pendaftaran:', e);
+      msg.style.color = '#b5462f';
+      msg.textContent = t('msg_email_error');
+    }).then(function(){
+      signupBtn.disabled = false; // selalu aktifkan tombol lagi
+    });
+  }
+
+  signupBtn.addEventListener('click', submitSignup);
+  emailInput.addEventListener('keydown', function(e){
+    if (e.key === 'Enter') { e.preventDefault(); submitSignup(); }
   });
 
   // ---- Unggah CV (PDF) + pemindaian dummy ----
