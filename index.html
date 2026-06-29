@@ -41,16 +41,9 @@
     padding: 26px 0; border-bottom: 1px solid var(--line);
   }
   .brand {
-    display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
+    display: flex; flex-direction: column; align-items: flex-start; gap: 4px;
   }
-  .brand-logo {
-    display: inline-flex; align-items: center; gap: 3px;
-    font-family: -apple-system, system-ui, sans-serif; font-weight: 800;
-    font-size: 1.5rem; letter-spacing: -0.02em; line-height: 1;
-  }
-  .brand-logo .lv-lev { color: var(--ink); }
-  .brand-logo .lv-up { color: var(--batik); }
-  .brand-logo .lv-arrow { width: .82em; height: .82em; color: var(--batik); flex-shrink: 0; }
+  .brand-logo { display: block; height: 34px; width: auto; }
   .brand small { font-weight: 400; font-size: .7rem; color: var(--muted); letter-spacing: .14em; text-transform: uppercase; }
   .topbar nav a {
     color: var(--muted); text-decoration: none; font-size: .82rem;
@@ -199,10 +192,7 @@
 
 <header class="wrap topbar">
   <div class="brand">
-    <span class="brand-logo">
-      <span class="lv-word"><span class="lv-lev">Lev</span><span class="lv-up">Up</span></span>
-      <svg class="lv-arrow" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1L21 12L15.5 12L15.5 22L8.5 22L8.5 12L3 12Z"/></svg>
-    </span>
+    <img class="brand-logo" src="levup-logo.png" alt="LevUp" width="183" height="68">
     <small data-i18n="brand_tag">CV check untuk pelamar global</small>
   </div>
   <div class="right">
